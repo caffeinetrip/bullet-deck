@@ -12,7 +12,7 @@ class Bullet(pp.Entity):
 
     @property
     def img(self):
-        return self.e['Assets'].images['bullets'][self.type]
+        return self.e['Assets'].images['bullets']['bullet']
 
     def update(self, dt):
 
@@ -25,3 +25,5 @@ class Bullet(pp.Entity):
         screen_w, screen_h = self.e['Window'].size
         if not (0 <= self.pos[0] <= screen_w and 0 <= self.pos[1] <= screen_h):
             self.destroy()
+
+        self.renderz()

@@ -19,8 +19,10 @@ class Window(ElementSingleton):
         self.background_color = (0, 0, 0)
         self.time = time.time()
         self.start_time = time.time()
+        self.runtime_ = self.time - self.start_time
         self.frames = 0
         self.frame_log = []
+        
         
         pygame.init()
         pygame.display.set_caption(caption)
@@ -41,10 +43,6 @@ class Window(ElementSingleton):
     @property
     def fps(self):
         return len(self.frame_log) / sum(self.frame_log)
-        
-    @property
-    def runtime(self):
-        return self.time - self.start_time
     
     def cycle(self, uniforms={}):
         if self.render_object:
@@ -63,4 +61,5 @@ class Window(ElementSingleton):
         self.e['Input'].update()
         self.time = time.time()
         self.frames += 1
+        self.runtime_ = self.time - self.start_time
         
