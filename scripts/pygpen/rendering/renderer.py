@@ -19,10 +19,13 @@ class Renderer(ElementSingleton):
         for group in self.groups:
             self.render_queue[group] = []
     
-    def blit(self, surf, pos, z=0, group='default'):
+    def blit(self, surf, pos, z=0, group='default', alpha=None):
+        if alpha is not None:
+            surf = surf.copy()
+            surf.set_alpha(alpha)
         self.render_queue[group].append((z, self.i, surf, pos))
         self.i += 1
-    
+        
     # works with anything that takes the surface as the first argument
     def renderf(self, func, *args, **kwargs):
         z = kwargs['z'] if 'z' in kwargs else 0

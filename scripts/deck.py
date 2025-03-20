@@ -22,10 +22,11 @@ class Deck(pp.ElementSingleton):
         self.shuffle('all')
         
     def shuffle(self, card_i='all'):
+        card_type = choice(CARDS_SHUFFLE)
+        
         if card_i == 'all':
             for i in range(len(self.cards)):
                 card_type = choice(CARDS_SHUFFLE)
-                
                 self.cards[i] = Card(i, card_type)
                 
             return

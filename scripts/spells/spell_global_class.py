@@ -9,8 +9,8 @@ class Spells(pp.Element):
         self.pos = pos
         self.angle = angle
         
-        self.object_function = self.use()
+        self.object_function = self.use
         self.objects = objects
-        
-    def use(self):
-        print('Spell is used!')
+
+    def destroy(self):
+        del self

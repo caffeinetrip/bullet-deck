@@ -3,10 +3,11 @@ from scripts.pygpen.utils.game_math import distance
 
 
 class Enemy(pp.Entity):
-    def __init__(self, type, pos, target):
+    def __init__(self, speed, type, pos, target):
         super().__init__(type, pos)
         
-        self.speed = 1
+        self.speed = 0
+        self.speed_ = speed
         self.target_pos = target
         
         self.outline = (40, 35, 40)
@@ -15,9 +16,12 @@ class Enemy(pp.Entity):
     def img(self):
         return self.e['Assets'].images['enemy']['default']
 
-    def update(self, dt):
+    def update(self):
         if self.target_pos is None:
             return False
+        
+        if self.speed < self.speed_:
+            self.speed += 0.005
 
         dx = self.target_pos[0] - self.pos[0]
         dy = self.target_pos[1] - self.pos[1]
@@ -29,7 +33,7 @@ class Enemy(pp.Entity):
         direction_x = dx / dist
         direction_y = dy / dist
 
-        step = self.speed * dt
+        step = self.speed
 
         self.pos[0] += direction_x * step
         self.pos[1] += direction_y * step
@@ -38,4 +42,4 @@ class Enemy(pp.Entity):
             self.pos = self.target_pos
             self.target_pos = None
         
-        self.renderz()
+        self.renderz(group='game')

@@ -6,3 +6,4 @@ class one_bullet(Spells):
         
     def use(self):
         print('One bullet!')
+        self.destroy()

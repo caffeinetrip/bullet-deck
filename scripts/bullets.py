@@ -2,11 +2,13 @@ import pygpen as pp
 import math
 
 class Bullet(pp.Entity):
-    def __init__(self, *args, angle=0, **kwargs):
+    def __init__(self, *args, angle=0, health=1, **kwargs):
         super().__init__(*args, **kwargs)
         
         self.speed = 3 
         self.angle = math.radians(angle) 
+        
+        self.health = health
         
         self.outline = (40, 35, 40)
 
@@ -14,10 +16,10 @@ class Bullet(pp.Entity):
     def img(self):
         return self.e['Assets'].images['bullets']['bullet']
 
-    def update(self, dt):
+    def update(self):
 
-        dx = math.cos(self.angle) * self.speed * dt
-        dy = math.sin(self.angle) * self.speed * dt
+        dx = math.cos(self.angle) * self.speed
+        dy = math.sin(self.angle) * self.speed
 
         self.pos[0] += dx
         self.pos[1] += dy

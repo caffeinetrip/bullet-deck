@@ -20,9 +20,5 @@ class Card(pp.Element):
         return class_obj
     
     def use_card(self):
-        if self.class_ref:
-            instance = self.class_ref([0,0], None)
-            instance.use() 
-            
-    def render(self):
-        pass
+        instance = self.class_ref([0,0], None)
+        instance.use() 
