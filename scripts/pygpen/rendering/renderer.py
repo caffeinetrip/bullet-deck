@@ -19,10 +19,7 @@ class Renderer(ElementSingleton):
         for group in self.groups:
             self.render_queue[group] = []
     
-    def blit(self, surf, pos, z=0, group='default', alpha=None):
-        if alpha is not None:
-            surf = surf.copy()
-            surf.set_alpha(alpha)
+    def blit(self, surf, pos, z=0, group='default'):
         self.render_queue[group].append((z, self.i, surf, pos))
         self.i += 1
         

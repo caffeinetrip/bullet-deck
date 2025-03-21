@@ -31,12 +31,10 @@ class Game(pp.PygpenGame):
 
     def update(self):
         
-        self.game_surf.fill((0, 0, 0))
-        self.display.fill((0, 0, 0, 0))
-        self.ui_surf.fill((0, 0, 0, 0))
-        self.light_surf.fill((0, 0, 0))
-        
         self.game_surf.fill((40, 35, 40))
+        self.display.fill((0, 0, 0, 0))
+        self.ui_surf.fill((0, 0, 0))
+        self.light_surf.fill((0, 0, 0))
         
         self.e['Renderer'].cycle({'default': self.display, 'ui': self.ui_surf, 'game': self.game_surf})
         self.camera.update()
@@ -50,3 +48,5 @@ class Game(pp.PygpenGame):
         self.e['Window'].cycle({'surface': self.display, 'background_surf': self.game_surf,  'ui_surf': self.ui_surf, 'light_surf': self.light_surf})
             
 Game().run()
+
+# cz

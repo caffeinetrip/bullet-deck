@@ -23,9 +23,6 @@ class G(pp.ElementSingleton):
         self.bounce = False
         
         self.deck = Deck()
-        self.kd = 1
-        self.card_cooldowns = [0, 0, 0]
-        self.deck_binds = [	"first_card", "second_card", "third_card"]
         
         self.enemy_range_count = [3, 5]
 
@@ -34,21 +31,27 @@ class G(pp.ElementSingleton):
         for idx, item in enumerate(self.deck.cards):
             self.e['Renderer'].blit(item.img, [x, self.player_center[1]], group='game')
             
-            if self.card_cooldowns[idx] > 0:
-                progress = round(dt-self.card_cooldowns[idx], 1)
+            if self.deck.card_cooldowns[idx] > 0:
                 
-                if progress >= self.kd:
-                    self.card_cooldowns[idx] = 0
+                progress = round(dt-self.deck.card_cooldowns[idx], 2)
+                
+                if progress >= self.deck.kd[idx][0]:
+                    if len(self.deck.kd[idx]) == 1:
+                        self.deck.card_cooldowns[idx] = 0
+                        self.deck.kd[idx][0] = 0
+                    else:
+                        self.deck.kd[idx].pop(0)
+                      
                 else:
-                    surf = pygame.Surface([item.img.get_width(), item.img.get_height()*(1.0-progress)])
-                    surf.fill((1,0,0))
-                    self.e['Renderer'].blit(surf, [x, self.player_center[1]], group='ui', alpha=20)
+                    surf_height = item.img.get_height() * (1.0 - (progress / self.deck.kd[idx][0]))
+                    surf_height = max(0, min(surf_height, item.img.get_height()))
+                    surf = pygame.Surface([item.img.get_width(), surf_height])
+                    surf.fill((10,10,10))
+                    surf.set_alpha(80)
+                    self.e['Renderer'].blit(surf, [x, self.player_center[1]], group='game')
                 
-            if self.e['Input'].pressed(self.deck_binds[idx]) and self.card_cooldowns[idx] == 0:
-                self.deck.cards[idx].use_card()
-                for i in range(3):
-                    self.card_cooldowns[i] = dt
-                self.deck.shuffle(idx)
+            if self.e['Input'].pressed(self.deck.deck_binds[idx]) and self.deck.card_cooldowns[idx] == 0:
+                self.deck.card_use(idx, dt)
                 
             x += 25
         

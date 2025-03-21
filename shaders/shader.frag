@@ -28,13 +28,13 @@ void main() {
 
     int light_color = int(texture(light_surf, uv).r * 255.0 / 10.0);
 
-    color_i = max(0, color_i - (3 - light_color));
+    color_i = max(0, color_i);
 
     f_color = vec4(color_ramp[color_i], 1.0);
   }
 
   vec4 ui_color = texture(ui_surf, uv);
-  if (ui_color.a > 0) {
-    f_color = ui_color;
+  if (ui_color.r > 0) {
+    f_color += ui_color;
   }
 }
