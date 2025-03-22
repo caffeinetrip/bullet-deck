@@ -3,7 +3,7 @@
 uniform sampler2D surface;
 uniform sampler2D ui_surf;
 uniform sampler2D light_surf;
-uniform sampler2D background_surf;
+uniform sampler2D game_surf;
 
 out vec4 f_color;
 in vec2 uv;
@@ -11,9 +11,9 @@ in vec2 uv;
 const vec3 color_ramp[4] = vec3[4](vec3(40 / 255.0, 35 / 255.0, 40 / 255.0), vec3(84 / 255.0, 92 / 255.0, 126 / 255.0), vec3(197 / 255.0, 105 / 255.0, 129 / 255.0), vec3(163 / 255.0, 162 / 255.0, 154 / 255.0));
 
 void main() {
-  vec3 bg_color = texture(background_surf, uv).rgb;
+  vec3 gm_color = texture(game_surf, uv).rgb;
 
-  f_color = vec4(bg_color, 1.0);
+  f_color = vec4(gm_color, 1.0);
 
 
   vec4 src_color = texture(surface, uv);

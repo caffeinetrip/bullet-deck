@@ -6,10 +6,13 @@ import pygame, random
 RECT_SIZE = (50, 50, 50, 50)
 
 class G(pp.ElementSingleton):
-    def __init__(self, player_pos, custom_id=None):
+    def __init__(self, custom_id=None):
         super().__init__(custom_id)
         
+        player_pos = pp.io.read_json('data/hooks/data.json')['player_position']
+        
         self.health = 3
+        self.enemy_x_range = 300
         self.enemy_move = player_pos
         self.player_center = [player_pos[0]-25, player_pos[1]-50]
         
@@ -17,8 +20,8 @@ class G(pp.ElementSingleton):
             *RECT_SIZE
         )
         
-        self.bullets = []
-        self.enemys = []
+        self.bullets = self.bullets = pp.EntityGroups()
+        self.enemys = self.enemys = pp.EntityGroups(quad_size=self.enemy_x_range, quad_groups=['enemies']) 
         self.spawn_time = 0
         self.bounce = False
         
@@ -35,7 +38,7 @@ class G(pp.ElementSingleton):
                 
                 progress = round(dt-self.deck.card_cooldowns[idx], 2)
                 
-                if progress >= self.deck.kd[idx][0]:
+                if progress >= self.deck.kd[idx][0]-0.1:
                     if len(self.deck.kd[idx]) == 1:
                         self.deck.card_cooldowns[idx] = 0
                         self.deck.kd[idx][0] = 0
@@ -50,24 +53,34 @@ class G(pp.ElementSingleton):
                     surf.set_alpha(80)
                     self.e['Renderer'].blit(surf, [x, self.player_center[1]], group='game')
                 
-            if self.e['Input'].pressed(self.deck.deck_binds[idx]) and self.deck.card_cooldowns[idx] == 0:
+            if self.e['Input'].pressed(self.deck.deck_binds[idx]) and self.deck.card_cooldowns[idx] == 0 and self.deck.kd[idx][0] == 0:
                 self.deck.card_use(idx, dt)
                 
             x += 25
         
+    def render(self):
+        self.bullets.render()
+        self.enemys.render()
+
     def update(self, dt):
+        
         if dt % 5 == 0 and not self.bounce:
-            for _ in range(random.randint(self.enemy_range_count[0], self.enemy_range_count[1])):
-                self.enemys.append(Enemy((random.randint(10, 15)) / 100, 'enemy', [random.randint(40, 300), random.randint(50, 100)], self.enemy_move))
-            self.bounce = True
+            used_x = []
             
+            for _ in range(random.randint(self.enemy_range_count[0], self.enemy_range_count[1])):
+                enemy_x = pp.game_math.randint_excluding_ranges(40, self.enemy_x_range, used_x)
+                enemy = Enemy((random.randint(10, 15)) / 100, 'enemy', [enemy_x, random.randint(40, 50)], self.enemy_move)
+                self.enemys.add(enemy, 'enemies')
+                used_x.append([enemy_x-5, enemy_x+5])
+                
+            self.bounce = True
+
         if dt % 5 != 0 and self.bounce:
             self.bounce = False
-        
-        for bullet in self.bullets:
-            bullet.update()
-        
-        for enemy in self.enemys:
-            enemy.update()
-        
+
+        self.bullets.update()
+        self.enemys.update()
+
+        self.render()
         self.deck_update(dt)
+

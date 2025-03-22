@@ -1,6 +1,4 @@
-import math
-
-import pygame
+import math, pygame, random
 
 def normalize(v, amt, target=0):
     if v > target + amt:
@@ -33,3 +31,9 @@ def distance(p1, p2):
 
 def lerp(a, b, t):
     return a + (b - a) * t
+
+def randint_excluding_ranges(start, end, forbidden_ranges):
+    while True:
+        num = random.randint(start, end)
+        if all(not (low <= num <= high) for low, high in forbidden_ranges):
+            return num

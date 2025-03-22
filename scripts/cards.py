@@ -30,5 +30,5 @@ class Card(pp.Element):
         return class_obj
     
     def use_card(self):
-        instance = self.class_ref([0,0], None)
+        instance = self.class_ref(None)
         instance.use() 

@@ -2,7 +2,7 @@ import pygame, sys, json
 
 import scripts.pygpen as pp
 
-from scripts.game_session import G
+from scripts.g import G
 class Game(pp.PygpenGame):
     def load(self):
         pp.init(
@@ -23,7 +23,7 @@ class Game(pp.PygpenGame):
         self.e['Assets'].load_folder('data/images/entities/enemy', colorkey=(0, 0, 0))
         self.e['Assets'].load_folder('data/images/cards', colorkey=(0, 0, 0))
 
-        self.g = G([340/2, 220])
+        self.g = G()
 
         self.e['Renderer'].set_groups(['default', 'ui', 'game'])
         
@@ -45,8 +45,6 @@ class Game(pp.PygpenGame):
             pygame.quit()
             sys.exit()
             
-        self.e['Window'].cycle({'surface': self.display, 'background_surf': self.game_surf,  'ui_surf': self.ui_surf, 'light_surf': self.light_surf})
+        self.e['Window'].cycle({'surface': self.display, 'game_surf': self.game_surf,  'ui_surf': self.ui_surf, 'light_surf': self.light_surf})
             
 Game().run()
-
-# cz

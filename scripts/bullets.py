@@ -1,9 +1,9 @@
-import pygpen as pp
+import scripts.pygpen as pp
 import math
 
 class Bullet(pp.Entity):
-    def __init__(self, *args, angle=0, health=1, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, type, pos, angle=0, health=1):
+        super().__init__(type, pos)
         
         self.speed = 3 
         self.angle = math.radians(angle) 
@@ -27,5 +27,3 @@ class Bullet(pp.Entity):
         screen_w, screen_h = self.e['Window'].size
         if not (0 <= self.pos[0] <= screen_w and 0 <= self.pos[1] <= screen_h):
             self.destroy()
-
-        self.renderz()

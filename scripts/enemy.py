@@ -41,5 +41,3 @@ class Enemy(pp.Entity):
         if distance(self.pos, self.target_pos) <= step:
             self.pos = self.target_pos
             self.target_pos = None
-        
-        self.renderz(group='game')

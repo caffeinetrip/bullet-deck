@@ -97,11 +97,11 @@ class Entity(Element):
         if self.visible:
             surf.blit(self.img, self.topleft(offset))
     
-    def renderz(self, offset=(0, 0), group='default'):
+    def renderz(self, offset=(0, 0), group='game'):
         if self.visible:
             self.e['Renderer'].blit(self.img, self.topleft(offset), z=self.z, group=group)
 
-    def renderz(self, offset=(0, 0), group='default'):
+    def renderz(self, offset=(0, 0), group='game'):
         if self.visible:
             base_pos = self.topleft(offset)
             if self.outline:

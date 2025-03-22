@@ -10,6 +10,8 @@ class EntityGroups(ElementSingleton):
         self.locked = False
         self.add_queue = []
         
+        self.z = 0
+        
         self.quad_groups = set(quad_groups)
         self.equads = EQuads(quad_size=quad_size)
         
@@ -29,7 +31,6 @@ class EntityGroups(ElementSingleton):
                 self.groups[group].append(entity)
     
     def update(self, group=None, unlock=True, quad_rect=pygame.Rect(0, 0, 100, 100)):
-        dt = self.e['Window'].dt
         
         # update active entities based on quads (only applies when doing a general update)
         if len(self.quad_groups) and not group:
@@ -41,7 +42,7 @@ class EntityGroups(ElementSingleton):
         if group:
             if group in self.groups:
                 for entity in self.groups[group].copy():
-                    kill = entity.update(dt)
+                    kill = entity.update()
                     if kill:
                         self.groups[group].remove(entity)
                         # delete from quads if applicable
@@ -57,14 +58,14 @@ class EntityGroups(ElementSingleton):
                     self.add(*addition)
                 self.add_queue = []
     
-    def render(self, surf, group=None, offset=(0, 0)):
+    def render(self, group=None, offset=(0, 0)):
         if group:
             if group in self.groups:
                 for entity in self.groups[group]:
-                    entity.render(surf, offset=offset)
+                    entity.renderz(offset=offset)
         else:
             for group in self.groups:
-                self.render(surf, group=group, offset=offset)
+                self.render(group=group, offset=offset)
     
     def renderz(self, group=None, render_group='default', offset=(0, 0)):
         if group:

@@ -19,7 +19,8 @@ class Deck(pp.ElementSingleton):
         super().__init__(custom_id)
         
         self.cards = [None, None, None]
-        self.kd = [[],[],[]]
+        self.kd = [[0],[0],[0]]
+        self.max_kd = [0,0,0]
         self.card_cooldowns = [0, 0, 0]
         self.deck_binds = ["first_card", "second_card", "third_card"]
         
@@ -30,7 +31,9 @@ class Deck(pp.ElementSingleton):
         for i in range(3):
             self.card_cooldowns[i] = time
             self.kd[i].append(self.cards[idx].kooldown[0])
+            self.max_kd[i] += self.cards[idx].kooldown[0]
         self.kd[idx][len(self.kd[idx])-1] += self.cards[idx].kooldown[1]
+        self.max_kd[idx] += self.cards[idx].kooldown[1]
         self.shuffle(idx)
         
     def shuffle(self, card_i='all'):
