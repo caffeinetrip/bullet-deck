@@ -7,4 +7,4 @@ class one_bullet(Spells):
         super().__init__(*args, **kwargs)
         
     def use(self):
-        return Bullet('basic_bullet', [self.pos[0], self.pos[1]-20])
+        return [Bullet('bullet', [self.pos[0], self.pos[1]-20], self.angle)]

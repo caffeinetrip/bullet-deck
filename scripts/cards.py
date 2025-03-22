@@ -29,6 +29,6 @@ class Card(pp.Element):
         class_obj = getattr(module, self.type)
         return class_obj
     
-    def use_card(self):
-        instance = self.class_ref(None)
-        instance.use() 
+    def use_card(self, angle):
+        instance = self.class_ref(angle)
+        return instance.use() 

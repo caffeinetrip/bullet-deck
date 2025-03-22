@@ -21,6 +21,7 @@ class Game(pp.PygpenGame):
         self.light_surf = pygame.Surface((340, 220))
         
         self.e['Assets'].load_folder('data/images/entities/enemy', colorkey=(0, 0, 0))
+        self.e['Assets'].load_folder('data/images/entities/bullet', colorkey=(0, 0, 0))
         self.e['Assets'].load_folder('data/images/cards', colorkey=(0, 0, 0))
 
         self.g = G()

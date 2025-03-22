@@ -1,14 +1,13 @@
 import scripts.pygpen as pp
 
 class Spells(pp.Element):
-    def __init__(self, objects, angle=0, custom_id=None, singleton=False, register=False):
+    def __init__(self, angle, custom_id=None, singleton=False, register=False):
         super().__init__(custom_id, singleton, register)
         
         self.per_use_time = 0.1
         
         self.pos = pp.io.read_json('data/hooks/data.json')['player_position']
         self.angle = angle
-        self.objects = objects
 
     def destroy(self):
         del self

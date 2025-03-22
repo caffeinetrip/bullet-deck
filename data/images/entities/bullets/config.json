@@ -1,1 +1,0 @@
-{"images": {"bullet": {"offset": [0, 0]}}, "animations": {}, "file_path": "data/images/entities/bullets", "id": "bullets", "centered": false, "offset": [0, 0], "colorkey": [0, 0, 0], "size": [1, 1], "group": "entity", "collide_with": [], "default": "bullet"}

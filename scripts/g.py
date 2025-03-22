@@ -1,7 +1,7 @@
 from scripts.enemy import Enemy
 from scripts.deck import Deck
 import scripts.pygpen as pp
-import pygame, random
+import pygame, random, math
 
 RECT_SIZE = (50, 50, 50, 50)
 
@@ -12,6 +12,8 @@ class G(pp.ElementSingleton):
         player_pos = pp.io.read_json('data/hooks/data.json')['player_position']
         
         self.health = 3
+        self.angle = None
+        
         self.enemy_x_range = 300
         self.enemy_move = player_pos
         self.player_center = [player_pos[0]-25, player_pos[1]-50]
@@ -20,7 +22,7 @@ class G(pp.ElementSingleton):
             *RECT_SIZE
         )
         
-        self.bullets = self.bullets = pp.EntityGroups()
+        self.bullets = self.bullets = pp.EntityGroups(quad_size=self.enemy_x_range*2, quad_groups=['bullets'])
         self.enemys = self.enemys = pp.EntityGroups(quad_size=self.enemy_x_range, quad_groups=['enemies']) 
         self.spawn_time = 0
         self.bounce = False
@@ -29,42 +31,45 @@ class G(pp.ElementSingleton):
         
         self.enemy_range_count = [3, 5]
 
-    def deck_update(self, dt):
+    def deck_update(self, time):
         x = self.player_center[0] - 20
+
         for idx, item in enumerate(self.deck.cards):
             self.e['Renderer'].blit(item.img, [x, self.player_center[1]], group='game')
-            
+
             if self.deck.card_cooldowns[idx] > 0:
-                
-                progress = round(dt-self.deck.card_cooldowns[idx], 2)
-                
-                if progress >= self.deck.kd[idx][0]-0.1:
+                progress = round(time - self.deck.card_cooldowns[idx], 2)
+
+                if progress >= self.deck.kd[idx][0] - 0.1:
                     if len(self.deck.kd[idx]) == 1:
                         self.deck.card_cooldowns[idx] = 0
                         self.deck.kd[idx][0] = 0
                     else:
                         self.deck.kd[idx].pop(0)
-                      
                 else:
                     surf_height = item.img.get_height() * (1.0 - (progress / self.deck.kd[idx][0]))
                     surf_height = max(0, min(surf_height, item.img.get_height()))
                     surf = pygame.Surface([item.img.get_width(), surf_height])
-                    surf.fill((10,10,10))
+                    surf.fill((10, 10, 10))
                     surf.set_alpha(80)
                     self.e['Renderer'].blit(surf, [x, self.player_center[1]], group='game')
-                
-            if self.e['Input'].pressed(self.deck.deck_binds[idx]) and self.deck.card_cooldowns[idx] == 0 and self.deck.kd[idx][0] == 0:
-                self.deck.card_use(idx, dt)
-                
+
+            if self.e['Input'].holding(self.deck.deck_binds[idx]) and self.deck.card_cooldowns[idx] == 0 and self.deck.kd[idx][0] == 0:
+                self.angle = pp.game_math.calculate_angle(pp.game_math.scale_mouse_pos(self.e['Mouse'].pos, self.e['Window'].dimensions, [340, 220]),
+                                                          self.enemy_move)
+            elif self.e['Input'].released(self.deck.deck_binds[idx]) and self.deck.card_cooldowns[idx] == 0 and self.deck.kd[idx][0] == 0:
+                for bullet in self.deck.card_use(idx, time, self.angle):
+                    self.bullets.add(bullet, 'bullets')
+
             x += 25
         
     def render(self):
         self.bullets.render()
         self.enemys.render()
 
-    def update(self, dt):
+    def update(self, time):
         
-        if dt % 5 == 0 and not self.bounce:
+        if time % 5 == 0 and not self.bounce:
             used_x = []
             
             for _ in range(random.randint(self.enemy_range_count[0], self.enemy_range_count[1])):
@@ -75,12 +80,12 @@ class G(pp.ElementSingleton):
                 
             self.bounce = True
 
-        if dt % 5 != 0 and self.bounce:
+        if time % 5 != 0 and self.bounce:
             self.bounce = False
 
         self.bullets.update()
         self.enemys.update()
 
         self.render()
-        self.deck_update(dt)
+        self.deck_update(time)
 

@@ -37,3 +37,21 @@ def randint_excluding_ranges(start, end, forbidden_ranges):
         num = random.randint(start, end)
         if all(not (low <= num <= high) for low, high in forbidden_ranges):
             return num
+        
+def calculate_angle(pos1, pos2):
+    mouse_x, mouse_y = [pos1[0], pos1[1]]
+    screen_x, screen_y = pos2
+    
+    angle_rad = math.atan2((screen_y - mouse_y)*-1, (screen_x - mouse_x)*-1)
+    print(round(math.degrees(angle_rad)))
+    return round(math.degrees(angle_rad))
+
+def scale_mouse_pos(mouse_pos, original_size, target_size):
+    mouse_x, mouse_y = mouse_pos
+    orig_w, orig_h = original_size
+    target_w, target_h = target_size
+
+    scaled_x = mouse_x * (target_w / orig_w)
+    scaled_y = mouse_y * (target_h / orig_h)
+
+    return round(scaled_x), round(scaled_y)
