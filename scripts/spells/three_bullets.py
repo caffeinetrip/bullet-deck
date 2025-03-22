@@ -7,6 +7,6 @@ class three_bullets(Spells):
         super().__init__(*args, **kwargs)
         
     def use(self):
-        return [Bullet('bullet', [self.pos[0], self.pos[1]-20]), 
-                Bullet('bullet', [self.pos[0], self.pos[1]-20]), 
-                Bullet('bullet', [self.pos[0], self.pos[1]-20])]
+        return [Bullet('bullet', [self.pos[0], self.pos[1]-20], self.angle-15), 
+                Bullet('bullet', [self.pos[0], self.pos[1]-20], self.angle), 
+                Bullet('bullet', [self.pos[0], self.pos[1]-20], self.angle+15)]

@@ -32,7 +32,7 @@ class Game(pp.PygpenGame):
 
     def update(self):
         
-        self.game_surf.fill((40, 35, 40))
+        self.game_surf.fill((116, 126, 102))
         self.display.fill((0, 0, 0, 0))
         self.ui_surf.fill((0, 0, 0))
         self.light_surf.fill((0, 0, 0))

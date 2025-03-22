@@ -29,9 +29,14 @@ class Deck(pp.ElementSingleton):
     def card_use(self, idx, time, angle):
         data = self.cards[idx].use_card(angle)
         for i in range(3):
-            self.card_cooldowns[i] = time
-            self.kd[i].append(self.cards[idx].kooldown[0])
+            if self.card_cooldowns[i] == 0:
+                self.card_cooldowns[i] = time
+                self.kd[i].append(self.cards[idx].kooldown[0])
+            else:
+                self.kd[i][0] += self.cards[idx].kooldown[0]
+            
             self.max_kd[i] += self.cards[idx].kooldown[0]
+            
         self.kd[idx][len(self.kd[idx])-1] += self.cards[idx].kooldown[1]
         self.max_kd[idx] += self.cards[idx].kooldown[1]
         self.shuffle(idx)

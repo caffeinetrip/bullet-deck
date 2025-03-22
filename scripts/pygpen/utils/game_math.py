@@ -43,7 +43,6 @@ def calculate_angle(pos1, pos2):
     screen_x, screen_y = pos2
     
     angle_rad = math.atan2((screen_y - mouse_y)*-1, (screen_x - mouse_x)*-1)
-    print(round(math.degrees(angle_rad)))
     return round(math.degrees(angle_rad))
 
 def scale_mouse_pos(mouse_pos, original_size, target_size):

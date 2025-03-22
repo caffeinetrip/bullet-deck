@@ -10,8 +10,6 @@ class Enemy(pp.Entity):
         self.speed_ = speed
         self.target_pos = target
         
-        self.outline = (40, 35, 40)
-        
     @property
     def img(self):
         return self.e['Assets'].images['enemy']['default']

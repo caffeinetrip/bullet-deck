@@ -18,11 +18,11 @@ class Card(pp.Element):
     @property
     def kooldown(self):
         if self.rang == 1:
-            return [0.75, 0.25]
+            return [0.75, 0.075]
         elif self.rang == 2:
-            return [2.0, 1.0]
+            return [1.5, 0.15]
         elif self.rang == 3:
-            return [3.0, 1.5] 
+            return [3.0, 0.3] 
         
     def _load_class(self):
         module = importlib.import_module(f'scripts.spells.{self.type}')
