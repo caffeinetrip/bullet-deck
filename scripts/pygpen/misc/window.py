@@ -23,7 +23,6 @@ class Window(ElementSingleton):
         self.frames = 0
         self.frame_log = []
         
-        
         pygame.init()
         pygame.display.set_caption(caption)
         self.screen = pygame.display.set_mode(self.dimensions, self.flags)
@@ -48,6 +47,7 @@ class Window(ElementSingleton):
         if self.render_object:
             if self.render_object.default and ('surface' not in uniforms):
                 uniforms['surface'] = self.screen
+            uniforms['time'] = self.time
             self.render_object.render(uniforms=uniforms)
         pygame.display.flip()
         self.clock.tick(self.fps_cap)

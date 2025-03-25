@@ -33,6 +33,7 @@ class RenderObject(Element):
                 else:
                     self.program[uniform].value = uniforms[uniform]
                     
+                    
     def parse_uniforms(self, uniforms):
         for name, value in uniforms.items():
             if type(value) == pygame.Surface:

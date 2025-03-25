@@ -29,7 +29,7 @@ class Game(pp.PygpenGame):
         self.e['Renderer'].set_groups(['default', 'ui', 'game'])
         
         self.camera = pp.Camera(self.display.get_size(), slowness=0.3, pos=[0,0])
-
+    
     def update(self):
         
         self.game_surf.fill((116, 126, 102))
