@@ -26,6 +26,8 @@ class Spark(Element):
             return True
         
         self.lifetime += 1
+        if self.lifetime > 50:
+            return True
         
         advance(self.pos, self.angle, self.speed * dt)
         

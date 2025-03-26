@@ -32,10 +32,10 @@ class G(pp.ElementSingleton):
         self.enemy_range_count = [3, 5]
 
     def deck_update(self, time):
-        x = self.player_center[0] - 20
+        x = self.player_center[0] - 35
 
         for idx, item in enumerate(self.deck.cards):
-            self.e['Renderer'].blit(item.img, [x, self.player_center[1]], group='game')
+            self.e['Renderer'].blit(item.img, [x, self.player_center[1]-10], group='game')
 
             if self.deck.card_cooldowns[idx] > 0:
                 progress = round(time - self.deck.card_cooldowns[idx], 2)
@@ -47,12 +47,12 @@ class G(pp.ElementSingleton):
                     else:
                         self.deck.kd[idx].pop(0)
                 else:
-                    surf_height = item.img.get_height() * (1.0 - (progress / self.deck.kd[idx][0]))
-                    surf_height = max(0, min(surf_height, item.img.get_height()))
-                    surf = pygame.Surface([item.img.get_width(), surf_height])
+                    surf_height = (item.img.get_height()-2) * (1.0 - (progress / self.deck.kd[idx][0]))
+                    surf_height = max(0, min(surf_height, item.img.get_height()-2))
+                    surf = pygame.Surface([item.img.get_width()-2, surf_height])
                     surf.fill((10, 10, 10))
                     surf.set_alpha(80)
-                    self.e['Renderer'].blit(surf, [x, self.player_center[1]], group='game')
+                    self.e['Renderer'].blit(surf, [x+2, self.player_center[1]-8], group='game')
 
             if self.e['Input'].holding(self.deck.deck_binds[idx]) and self.deck.card_cooldowns[idx] == 0 and self.deck.kd[idx][0] == 0:
                 self.angle = pp.game_math.calculate_angle(pp.game_math.scale_mouse_pos(self.e['Mouse'].pos, self.e['Window'].dimensions, [340, 220]),
@@ -61,7 +61,7 @@ class G(pp.ElementSingleton):
                 for bullet in self.deck.card_use(idx, time, self.angle):
                     self.game_objects.add(bullet, 'bullets')
 
-            x += 25
+            x += 40
         
     def update(self, time):
         
@@ -72,7 +72,7 @@ class G(pp.ElementSingleton):
                 enemy_x = pp.game_math.randint_excluding_ranges(40, self.enemy_x_range, used_x)
                 enemy = Enemy((random.randint(10, 15)) / 100, 'enemy', [enemy_x, random.randint(40, 50)], self.enemy_move)
                 self.game_objects.add(enemy, 'enemies')
-                used_x.append([enemy_x-5, enemy_x+5])
+                used_x.append([enemy_x-10, enemy_x+10])
                 
             self.bounce = True
 
@@ -80,9 +80,10 @@ class G(pp.ElementSingleton):
             self.bounce = False
             
         for particle in self.game_objects.kill_particles:
-            particle.update(self.e['Window'].dt)
+            kill = particle.update(self.e['Window'].dt)
             particle.renderz('game')
-            if particle.lifetime >= 50:
+            
+            if kill:
                 self.game_objects.kill_particles.remove(particle)
 
         self.game_objects.update(enemys_rects=self.game_objects.get_rects('enemies'))
