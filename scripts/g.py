@@ -23,7 +23,6 @@ class G(pp.ElementSingleton):
         )
         
         self.game_objects = pp.EntityGroups(quad_size=self.enemy_x_range*2, quad_groups=['bullets', 'enemies'])
-        self.game_objects.__setattr__('bullets_colide', [])
 
         self.spawn_time = 0
         self.bounce = False
@@ -79,6 +78,12 @@ class G(pp.ElementSingleton):
 
         if time % 5 != 0 and self.bounce:
             self.bounce = False
+            
+        for particle in self.game_objects.kill_particles:
+            particle.update(self.e['Window'].dt)
+            particle.renderz('game')
+            if particle.lifetime >= 50:
+                self.game_objects.kill_particles.remove(particle)
 
         self.game_objects.update(enemys_rects=self.game_objects.get_rects('enemies'))
 

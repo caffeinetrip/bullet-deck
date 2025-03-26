@@ -17,11 +17,15 @@ class Spark(Element):
         self.speed = speed
         self.decay = decay * self.speed
         self.color = color
+        
+        self.lifetime = 0
     
     def update(self, dt):
         self.speed -= self.decay * dt
         if self.speed <= 0:
             return True
+        
+        self.lifetime += 1
         
         advance(self.pos, self.angle, self.speed * dt)
         

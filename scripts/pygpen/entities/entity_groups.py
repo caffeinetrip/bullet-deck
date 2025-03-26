@@ -1,7 +1,8 @@
 import pygame
-
+import math
 from ..utils.elements import ElementSingleton
 from ..data_structures.entity_quads import EQuads
+import scripts.pygpen as pp
 
 class EntityGroups(ElementSingleton):
     def __init__(self, quad_size=64, quad_groups=[]):
@@ -11,18 +12,14 @@ class EntityGroups(ElementSingleton):
         self.add_queue = []
         
         self.z = 0
+        self.bullets_colide = []
+        self.kill_particles = []
         
         self.quad_groups = set(quad_groups)
         self.equads = EQuads(quad_size=quad_size)
         
     def set_quad_groups(self, quad_groups=[]):
         self.quad_groups = set(quad_groups)
-        
-    # def get_rects(self, group_name):
-    #     if group_name in self.groups:
-    #         for item in self.groups[group_name]:
-    #             yield item.rect
-    #     else: return []
         
     def get_rects(self, group_name):
         enemys_rect = []
@@ -37,7 +34,6 @@ class EntityGroups(ElementSingleton):
         if self.locked:
             self.add_queue.append((entity, group))
         else:
-            # two insert cases depending on whether the group is spatially partitioned
             if group in self.quad_groups:
                 self.equads.insert(entity, egroup=group)
             else:
@@ -45,37 +41,51 @@ class EntityGroups(ElementSingleton):
                     self.groups[group] = []
                 self.groups[group].append(entity)
     
-    def update(self, group=None, unlock=True, quad_rect=pygame.Rect(0, 0, 100, 100), enemys_rects=None):
+    def create_sparks(self, pos, count=8):
 
-        # update active entities based on quads (only applies when doing a general update)
+        for _ in range(count):
+            angle = math.pi * 2 * (1 / count * _)
+            self.kill_particles.append(pp.vfx.sparks.Spark(
+                pos=pos,
+                angle=angle,
+                size=(6, 2),
+                speed=125,
+                decay=3.0,
+                color=(54, 92, 99),
+                z=self.z
+            ))
+    
+    def update(self, group=None, unlock=True, quad_rect=pygame.Rect(0, 0, 100, 100), enemys_rects=None):
+        # update active entities based on quads
         if len(self.quad_groups) and not group:
             self.equads.update_active(quad_rect)
-            # update local group listing based on spatial partitioning
             self.groups.update(self.equads.active_entities)
             
         self.locked = True
         if group:
             if group in self.groups:
                 for entity in self.groups[group].copy():
-                    
                     if group == 'bullets':
                         kill = entity.update(enemys_rects=enemys_rects)
                     else:
                         kill = entity.update(self.bullets_colide)
                         
                     if kill:
+                        
+                        
                         if group == 'bullets':
                             self.bullets_colide.append(kill)
                         else:
+                            self.create_sparks(entity.rect.center)
                             self.bullets_colide.remove(kill)
                         
                         self.groups[group].remove(entity)
-                        # delete from quads if applicable
                         if group in self.quad_groups:
                             self.equads.delete(entity)
         else:
             for group in self.groups:
                 self.update(group, unlock=False, enemys_rects=enemys_rects)
+                
         if unlock:
             self.locked = False
             if len(self.add_queue):
