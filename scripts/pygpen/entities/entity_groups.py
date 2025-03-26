@@ -18,6 +18,21 @@ class EntityGroups(ElementSingleton):
     def set_quad_groups(self, quad_groups=[]):
         self.quad_groups = set(quad_groups)
         
+    # def get_rects(self, group_name):
+    #     if group_name in self.groups:
+    #         for item in self.groups[group_name]:
+    #             yield item.rect
+    #     else: return []
+        
+    def get_rects(self, group_name):
+        enemys_rect = []
+        
+        if group_name in self.groups:
+            for item in self.groups[group_name]:
+                enemys_rect.append(item.rect)
+        
+        return enemys_rect
+        
     def add(self, entity, group):
         if self.locked:
             self.add_queue.append((entity, group))
@@ -30,8 +45,8 @@ class EntityGroups(ElementSingleton):
                     self.groups[group] = []
                 self.groups[group].append(entity)
     
-    def update(self, group=None, unlock=True, quad_rect=pygame.Rect(0, 0, 100, 100)):
-        
+    def update(self, group=None, unlock=True, quad_rect=pygame.Rect(0, 0, 100, 100), enemys_rects=None):
+
         # update active entities based on quads (only applies when doing a general update)
         if len(self.quad_groups) and not group:
             self.equads.update_active(quad_rect)
@@ -42,15 +57,25 @@ class EntityGroups(ElementSingleton):
         if group:
             if group in self.groups:
                 for entity in self.groups[group].copy():
-                    kill = entity.update()
+                    
+                    if group == 'bullets':
+                        kill = entity.update(enemys_rects=enemys_rects)
+                    else:
+                        kill = entity.update(self.bullets_colide)
+                        
                     if kill:
+                        if group == 'bullets':
+                            self.bullets_colide.append(kill)
+                        else:
+                            self.bullets_colide.remove(kill)
+                        
                         self.groups[group].remove(entity)
                         # delete from quads if applicable
                         if group in self.quad_groups:
                             self.equads.delete(entity)
         else:
             for group in self.groups:
-                self.update(group, unlock=False)
+                self.update(group, unlock=False, enemys_rects=enemys_rects)
         if unlock:
             self.locked = False
             if len(self.add_queue):

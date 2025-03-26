@@ -1,1 +1,1 @@
-{"images": {"default": {"offset": [0, 0]}}, "animations": {}, "file_path": "data/images/entities/enemy", "id": "enemy", "centered": false, "offset": [0, 0], "colorkey": [0, 0, 0], "size": [1, 1], "group": "entity", "collide_with": [], "default": "default"}
+{"images": {"default": {"offset": [0, 0]}}, "animations": {}, "file_path": "data/images/entities/enemy", "id": "enemy", "centered": false, "offset": [0, 0], "colorkey": [0, 0, 0], "size": [12, 12], "group": "entity", "collide_with": [], "default": "default"}

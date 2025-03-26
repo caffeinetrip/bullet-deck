@@ -14,7 +14,7 @@ class Enemy(pp.Entity):
     def img(self):
         return self.e['Assets'].images['enemy']['default']
 
-    def update(self):
+    def update(self, bullets_rects):
         if self.target_pos is None:
             return False
         
@@ -39,3 +39,7 @@ class Enemy(pp.Entity):
         if distance(self.pos, self.target_pos) <= step:
             self.pos = self.target_pos
             self.target_pos = None
+            
+        for bullet_rect in bullets_rects:
+            if self.rect.colliderect(bullet_rect):
+                return bullet_rect

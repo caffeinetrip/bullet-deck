@@ -22,8 +22,9 @@ class G(pp.ElementSingleton):
             *RECT_SIZE
         )
         
-        self.bullets = self.bullets = pp.EntityGroups(quad_size=self.enemy_x_range*2, quad_groups=['bullets'])
-        self.enemys = self.enemys = pp.EntityGroups(quad_size=self.enemy_x_range, quad_groups=['enemies']) 
+        self.game_objects = pp.EntityGroups(quad_size=self.enemy_x_range*2, quad_groups=['bullets', 'enemies'])
+        self.game_objects.__setattr__('bullets_colide', [])
+
         self.spawn_time = 0
         self.bounce = False
         
@@ -59,14 +60,10 @@ class G(pp.ElementSingleton):
                                                           self.enemy_move)
             elif self.e['Input'].released(self.deck.deck_binds[idx]) and self.deck.card_cooldowns[idx] == 0 and self.deck.kd[idx][0] == 0:
                 for bullet in self.deck.card_use(idx, time, self.angle):
-                    self.bullets.add(bullet, 'bullets')
+                    self.game_objects.add(bullet, 'bullets')
 
             x += 25
         
-    def render(self):
-        self.bullets.render()
-        self.enemys.render()
-
     def update(self, time):
         
         if time % 5 == 0 and not self.bounce:
@@ -75,7 +72,7 @@ class G(pp.ElementSingleton):
             for _ in range(random.randint(self.enemy_range_count[0], self.enemy_range_count[1])):
                 enemy_x = pp.game_math.randint_excluding_ranges(40, self.enemy_x_range, used_x)
                 enemy = Enemy((random.randint(10, 15)) / 100, 'enemy', [enemy_x, random.randint(40, 50)], self.enemy_move)
-                self.enemys.add(enemy, 'enemies')
+                self.game_objects.add(enemy, 'enemies')
                 used_x.append([enemy_x-5, enemy_x+5])
                 
             self.bounce = True
@@ -83,9 +80,8 @@ class G(pp.ElementSingleton):
         if time % 5 != 0 and self.bounce:
             self.bounce = False
 
-        self.bullets.update()
-        self.enemys.update()
+        self.game_objects.update(enemys_rects=self.game_objects.get_rects('enemies'))
 
-        self.render()
+        self.game_objects.render()
         self.deck_update(time)
 
