@@ -23,6 +23,7 @@ class Game(pp.PygpenGame):
         self.e['Assets'].load_folder('data/images/entities/enemy', colorkey=(0, 0, 0))
         self.e['Assets'].load_folder('data/images/entities/bullet', colorkey=(0, 0, 0))
         self.e['Assets'].load_folder('data/images/cards', colorkey=(0, 0, 0))
+        self.e['Assets'].load_folder('data/images/background', colorkey=(0, 0, 0))
 
         self.g = G()
 
@@ -31,14 +32,14 @@ class Game(pp.PygpenGame):
         self.camera = pp.Camera(self.display.get_size(), slowness=0.3, pos=[0,0])
     
     def update(self):
+        self.e['Renderer'].cycle({'default': self.display, 'ui': self.ui_surf, 'game': self.game_surf})
+        self.camera.update()
         
-        self.game_surf.fill((116, 126, 102))
+        self.e['Renderer'].blit(self.e['Assets'].images['background']['bg'], (0,0), group='game')
+        
         self.display.fill((0, 0, 0, 0))
         self.ui_surf.fill((0, 0, 0))
         self.light_surf.fill((0, 0, 0))
-        
-        self.e['Renderer'].cycle({'default': self.display, 'ui': self.ui_surf, 'game': self.game_surf})
-        self.camera.update()
         
         self.g.update(round(self.e['Window'].runtime_, 1))
         

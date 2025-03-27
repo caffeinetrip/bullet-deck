@@ -51,7 +51,7 @@ class EntityGroups(ElementSingleton):
                 size=(6, 2),
                 speed=125,
                 decay=3.0,
-                color=(54, 92, 99),
+                color=(82, 90, 59),
                 z=self.z
             ))
     
