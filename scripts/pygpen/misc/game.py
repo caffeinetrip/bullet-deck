@@ -1,6 +1,6 @@
 import sys
 
-import pygame
+import pygame, asyncio
 
 from ..utils.elements import ElementSingleton
 
@@ -14,10 +14,11 @@ class PygpenGame(ElementSingleton):
     def update(self):
         pass
     
-    def run(self):
+    async def run(self):
         self.load()
         while True:
             self.update()
+            await asyncio.sleep(0)
             
     def quit(self):
         pygame.quit()

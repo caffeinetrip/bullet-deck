@@ -1,4 +1,4 @@
-import pygame, sys, json
+import pygame, sys, asyncio
 
 import scripts.pygpen as pp
 
@@ -48,4 +48,16 @@ class Game(pp.PygpenGame):
             sys.exit()
             
         self.e['Window'].cycle({'surface': self.display, 'game_surf': self.game_surf,  'ui_surf': self.ui_surf, 'light_surf': self.light_surf})
-Game().run()
+
+asyncio.run(Game().run())
+
+
+'''
+-- card description
+-- object shader 
+-- wbgl build
+-- particles
+-- ui (learn)
+-- sounds
+'''
+

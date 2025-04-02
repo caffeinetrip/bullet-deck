@@ -23,6 +23,7 @@ class Deck(pp.ElementSingleton):
         self.max_kd = [0,0,0]
         self.card_cooldowns = [0, 0, 0]
         self.deck_binds = ["first_card", "second_card", "third_card"]
+        self.progress = [0,0,0]
         
         self.shuffle('all')
         
